@@ -3,6 +3,7 @@
 @theme {
   --font-sans: "Space Grotesk", system-ui, sans-serif;
   --color-lime: #ccff00;
+  --color-ink: #110e08;
 }
 
 html,
@@ -19,5 +20,5 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   background-color: var(--color-lime);
-  color: #110e08;
+  color: var(--color-ink);
 }
