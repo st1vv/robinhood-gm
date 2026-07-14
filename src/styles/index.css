@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --color-lime: rgb(190, 240, 20);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0b0e11;
+}
