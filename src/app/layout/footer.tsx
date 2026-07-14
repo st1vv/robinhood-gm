@@ -9,7 +9,7 @@ export const Footer = () => {
           rel="noopener noreferrer"
           className="text-ink font-semibold hover:opacity-70 transition-opacity"
         >
-          [stiv]
+          {"[cryptostiv]"}
         </a>
       </p>
     </footer>
