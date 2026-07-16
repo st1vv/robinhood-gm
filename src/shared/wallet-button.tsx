@@ -11,7 +11,6 @@ export const WalletButton = () => {
         const label = account ? account.displayName : "Connect wallet";
         const onClick = account ? openAccountModal : openConnectModal;
         const variant = account ? "secondary" : "primary";
-        const iconColor = account ? "text-ink" : "text-lime";
 
         return (
           <StandartButton
@@ -19,7 +18,7 @@ export const WalletButton = () => {
             onClick={onClick}
             className="px-3 sm:px-4 flex gap-2 items-center"
           >
-            <WalletIcon className={`w-6 h-6 ${iconColor}`} />
+            <WalletIcon className={`w-6 h-6`} />
             <span className="hidden sm:inline">{label}</span>
           </StandartButton>
         );
