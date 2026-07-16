@@ -20,7 +20,10 @@ export const Home = () => {
   } = useCheckInStore();
   return (
     <div className="w-full max-w-md mx-auto flex flex-col items-center gap-6">
-      <HomeGlobalStats totalFree={totalFree} totalPremium={totalPremium} />
+      <HomeGlobalStats
+        totalFree={totalFree || 0}
+        totalPremium={totalPremium || 0}
+      />
       <div className="w-full flex flex-col items-center gap-6">
         <HomeCheckIns
           onCheckIn={onCheckIn}
@@ -33,8 +36,8 @@ export const Home = () => {
           premiumLabel={premiumLabel}
         />
         <HomeUserStats
-          freeCount={userFreeCount}
-          premiumCount={userPremiumCount}
+          freeCount={userFreeCount || 0}
+          premiumCount={userPremiumCount || 0}
         />
       </div>
     </div>
