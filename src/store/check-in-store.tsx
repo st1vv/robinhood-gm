@@ -62,13 +62,12 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(id);
   }, []);
 
-  const { data, refetch } = useReadContracts({
+  const { data: globalData, refetch: refetchGlobal } = useReadContracts({
     contracts: [
       {
         address: CHECKIN_ADDRESS,
         abi: checkInAbi,
-        functionName: "getLastCheckin",
-        args: [address ?? "0x0"],
+        functionName: "totalCheckins",
       },
       {
         address: CHECKIN_ADDRESS,
@@ -76,9 +75,29 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
         functionName: "MIN_INTERVAL",
       },
       {
+        address: PREMIUM_CHECKIN_ADDRESS,
+        abi: premiumCheckInAbi,
+        functionName: "totalPremiumCheckins",
+      },
+      {
+        address: PREMIUM_CHECKIN_ADDRESS,
+        abi: premiumCheckInAbi,
+        functionName: "premiumPrice",
+      },
+    ],
+    // без enabled — читається завжди
+  });
+
+  const [globalFreeTotal, minInterval, globalPremiumTotal, premiumPrice] =
+    globalData?.map((r) => r.result) ?? [];
+
+  const { data: userData, refetch } = useReadContracts({
+    contracts: [
+      {
         address: CHECKIN_ADDRESS,
         abi: checkInAbi,
-        functionName: "totalCheckins",
+        functionName: "getLastCheckin",
+        args: [address ?? "0x0"],
       },
       {
         address: CHECKIN_ADDRESS,
@@ -95,16 +114,6 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
       {
         address: PREMIUM_CHECKIN_ADDRESS,
         abi: premiumCheckInAbi,
-        functionName: "premiumPrice",
-      },
-      {
-        address: PREMIUM_CHECKIN_ADDRESS,
-        abi: premiumCheckInAbi,
-        functionName: "totalPremiumCheckins",
-      },
-      {
-        address: PREMIUM_CHECKIN_ADDRESS,
-        abi: premiumCheckInAbi,
         functionName: "getPremiumCheckinCount",
         args: [address ?? "0x0"],
       },
@@ -112,16 +121,8 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
     query: { enabled: isConnected },
   });
 
-  const [
-    lastFree,
-    minInterval,
-    globalFreeTotal,
-    userFreeCount,
-    lastPremium,
-    premiumPrice,
-    globalPremiumTotal,
-    userPremiumCount,
-  ] = data?.map((r) => r.result) ?? [];
+  const [lastFree, userFreeCount, lastPremium, userPremiumCount] =
+    userData?.map((r) => r.result) ?? [];
 
   const interval = Number(minInterval ?? 0);
   const secondsUntilFree = lastFree ? Number(lastFree) + interval - now : 0;
@@ -153,7 +154,7 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
         functionName: "checkIn",
       });
       await waitForTransactionReceipt(config, { hash });
-      await refetch();
+      await Promise.all([refetch(), refetchGlobal()]);;
       toast.success("GM complete!");
     } catch (err) {
       handleError(err, "Transaction failed!");
@@ -172,8 +173,8 @@ export function CheckInStoreProvider({ children }: { children: ReactNode }) {
         value: premiumPrice ?? 0n,
       });
       await waitForTransactionReceipt(config, { hash });
-      await refetch();
-      toast.success("Premium GM complete!")
+      await await Promise.all([refetch(), refetchGlobal()]);;
+      toast.success("Premium GM complete!");
     } catch (err) {
       handleError(err, "Premium transaction failed!");
     } finally {
