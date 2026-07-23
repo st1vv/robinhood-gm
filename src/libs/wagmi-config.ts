@@ -24,7 +24,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: "GM Robinhood",
+    appName: "RobinhoodGM",
     projectId: REOWN_PROJECT_ID,
   },
 );
